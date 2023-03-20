@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Heart } from '@/components/icons/Heart';
+import { Check } from '@/components/icons/Check';
 import { Close } from '@/components/icons/Close';
 import { AddTodo } from '@/components/AddTodo';
 import { gql } from 'graphql-request';
@@ -111,7 +111,7 @@ export const Todos = ({ list = [], listId }: TodosProps) => {
                   className="btn btn-square btn-accent"
                   onClick={() => void onFinishHandler(item.id)}
                 >
-                  <Heart />
+                  <Check />
                 </button>
                 <button
                   className="btn btn-square btn-error"
