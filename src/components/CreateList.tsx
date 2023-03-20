@@ -28,7 +28,7 @@ export const CreateList = ({ onCreate }: CreateListProps) => {
 
     if (formData.get('listName')?.length === 0) return;
 
-    const res = await client.request<{ newList: TodoList }>(
+    const res = await client.request<{ createTODOList: TodoList }>(
       CREATE_TODO_LIST_MUTATION,
       {
         input: {
@@ -38,7 +38,7 @@ export const CreateList = ({ onCreate }: CreateListProps) => {
       },
     );
 
-    onCreate(res.newList);
+    onCreate(res.createTODOList);
   };
 
   return (

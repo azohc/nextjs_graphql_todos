@@ -34,19 +34,20 @@ export const MyLists = ({ lists }: MyListsProps) => {
   };
 
   const onDeletedHandler = async (id: number) => {
-    await client.request(DELETE_TODO_LIST_MUTATION, {
-      listId: id,
-      email: MY_EMAIL_KEY,
-    });
-
     const targetList = todoLists.findIndex((tdl) => tdl.id === id);
     if (targetList === -1)
       throw new Error(
         `can not delete a list with id=${id} from ${JSON.stringify(todoLists)}`,
       );
+
+    await client.request(DELETE_TODO_LIST_MUTATION, {
+      listId: id,
+      email: MY_EMAIL_KEY,
+    });
+
     setTodoLists([
       ...todoLists.slice(0, targetList),
-      ...todoLists.slice(targetList),
+      ...todoLists.slice(targetList + 1),
     ]);
   };
 

@@ -9,6 +9,7 @@ export const AddTodo = ({ onAdd }: AddTODOFormProps) => {
     event.preventDefault();
     const desc = (event.currentTarget.desc as HTMLInputElement).value;
     onAdd(desc);
+    (event.currentTarget.desc as HTMLInputElement).value = '';
   };
 
   return (

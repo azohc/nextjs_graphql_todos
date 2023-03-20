@@ -27,6 +27,20 @@ const ADD_TODO_MUTATION = gql`
   }
 `;
 
+const REMOVE_TODO_MUTATION = gql`
+  mutation RemoveTODO($todoId: Int!, $listId: Int!) {
+    removeTODO(id: $todoId, listId: $listId)
+  }
+`;
+
+const FINISH_TODO_MUTATION = gql`
+  mutation FinishTODO($todoId: Int!, $listId: Int!) {
+    finishTODO(id: $todoId, listId: $listId) {
+      id
+    }
+  }
+`;
+
 export const Todos = ({ list = [], listId }: TodosProps) => {
   const [todos, setTodos] = useState<Todo[]>(list);
 
@@ -42,12 +56,43 @@ export const Todos = ({ list = [], listId }: TodosProps) => {
     setTodos([...todos, { id: addTODO.id, desc, finished: false }]);
   };
 
-  const onRemoveHandler = (id: number) => {
-    console.log(`Remove todo ${id}`);
+  const onRemoveHandler = async (id: number) => {
+    const targetTodo = todos.findIndex((t) => t.id === id);
+    if (targetTodo === -1)
+      throw new Error(
+        `can not delete a todo with id=${id} from ${JSON.stringify(todos)}`,
+      );
+
+    await client.request(REMOVE_TODO_MUTATION, {
+      todoId: id,
+      listId: Number(listId),
+      email: MY_EMAIL_KEY,
+    });
+
+    setTodos([...todos.slice(0, targetTodo), ...todos.slice(targetTodo + 1)]);
   };
 
-  const onFinishHandler = (id: number) => {
-    console.log(`Mark todo ${id} as finished`);
+  const onFinishHandler = async (id: number) => {
+    const targetTodo = todos.findIndex((t) => t.id === id);
+    if (targetTodo === -1)
+      throw new Error(
+        `can not finish a todo with id=${id} from ${JSON.stringify(todos)}`,
+      );
+
+    await client.request(FINISH_TODO_MUTATION, {
+      todoId: id,
+      listId: Number(listId),
+      email: MY_EMAIL_KEY,
+    });
+
+    setTodos([
+      ...todos.slice(0, targetTodo),
+      {
+        ...todos[targetTodo],
+        finished: true,
+      },
+      ...todos.slice(targetTodo + 1),
+    ]);
   };
 
   return (
@@ -64,13 +109,13 @@ export const Todos = ({ list = [], listId }: TodosProps) => {
               <div className="flex gap-2">
                 <button
                   className="btn btn-square btn-accent"
-                  onClick={() => onFinishHandler(item.id)}
+                  onClick={() => void onFinishHandler(item.id)}
                 >
                   <Heart />
                 </button>
                 <button
                   className="btn btn-square btn-error"
-                  onClick={() => onRemoveHandler(item.id)}
+                  onClick={() => void onRemoveHandler(item.id)}
                 >
                   <Close />
                 </button>
