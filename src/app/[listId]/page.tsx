@@ -1,4 +1,3 @@
-import { TodoList } from '@/components/MyLists';
 import { Todos } from '@/components/Todos';
 import { MY_EMAIL_KEY } from '@/constants/email';
 import { client } from '@/lib/client';
@@ -8,19 +7,30 @@ type MyListPageMetadata = {
   params: { listId: string };
 };
 
-const GET_TODO_LISTS_QUERY = gql`
-  query GetTODOLists($email: String!) {
-    getTODOLists(email: $email) {
-      id
-      name
-    }
-  }
-`;
-
 export function generateMetadata({ params }: MyListPageMetadata) {
   return {
     title: `TODO List ${params.listId}`,
   };
+}
+
+const GET_TODOS_QUERY = gql`
+  query GetTODOs($listId: Int!) {
+    getTODOs(listId: $listId) {
+      id
+      created_at
+      desc
+      todo_list_id
+      finished
+    }
+  }
+`;
+
+interface Todos {
+  id: number;
+  created_at: string;
+  desc: string;
+  todo_list_id: number;
+  finished: boolean;
 }
 
 type MyListPageProps = MyListPageMetadata;
@@ -28,9 +38,10 @@ type MyListPageProps = MyListPageMetadata;
 export default async function MyListPage({
   params: { listId },
 }: MyListPageProps) {
-  const { getTODOLists } = await client.request<{ getTODOLists: TodoList[] }>(
-    GET_TODO_LISTS_QUERY,
+  const { getTODOs } = await client.request<{ getTODOs: Todos[] }>(
+    GET_TODOS_QUERY,
     {
+      listId: Number(listId),
       email: MY_EMAIL_KEY,
     },
   );
@@ -39,12 +50,10 @@ export default async function MyListPage({
     <div className="flex align-center justify-center p-16 sm:p-8">
       <Todos
         listId={parseInt(listId)}
-        // TODO swap with real data from query and
-        // make sure to make the query from the server
-        list={getTODOLists.map((tdl) => ({
-          id: tdl.id,
-          desc: 'desc todo',
-          finished: false,
+        list={getTODOs.map((t) => ({
+          id: t.id,
+          desc: t.desc,
+          finished: t.finished,
         }))}
       />
     </div>
