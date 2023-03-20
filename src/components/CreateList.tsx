@@ -26,7 +26,9 @@ export const CreateList = ({ onCreate }: CreateListProps) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    const res = await client.request<{ createTODOList: TodoList }>(
+    if (formData.get('listName')?.length === 0) return;
+
+    const res = await client.request<{ newList: TodoList }>(
       CREATE_TODO_LIST_MUTATION,
       {
         input: {
@@ -36,18 +38,13 @@ export const CreateList = ({ onCreate }: CreateListProps) => {
       },
     );
 
-    onCreate(res.createTODOList);
+    onCreate(res.newList);
   };
 
   return (
     <div className="w-full text-center">
       <h2 className="text-3xl mb-8">Create new List</h2>
-      <form
-        onSubmit={(e) => {
-          void onSubmit(e);
-        }}
-        className="flex flex-col gap-4"
-      >
+      <form onSubmit={(e) => void onSubmit(e)} className="flex flex-col gap-4">
         <input
           type="text"
           id="listName"
