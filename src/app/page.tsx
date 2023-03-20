@@ -13,9 +13,12 @@ const GET_TODO_LISTS_QUERY = gql`
 `;
 
 export default async function Home() {
-  const { getTODOLists } = await client.request<{ getTODOLists: TodoList[] }>(GET_TODO_LISTS_QUERY, {
-    email: MY_EMAIL_KEY,
-  });
+  const { getTODOLists } = await client.request<{ getTODOLists: TodoList[] }>(
+    GET_TODO_LISTS_QUERY,
+    {
+      email: MY_EMAIL_KEY,
+    },
+  );
 
   return (
     <div className="p-8 flex items-center flex-col">

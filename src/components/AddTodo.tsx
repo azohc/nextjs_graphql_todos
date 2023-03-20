@@ -1,11 +1,13 @@
+import { FormEvent } from 'react';
+
 type AddTODOFormProps = {
   onAdd(desc: string): void;
 };
 
 export const AddTodo = ({ onAdd }: AddTODOFormProps) => {
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const desc = event.currentTarget.desc.value;
+    const desc = (event.currentTarget.desc as HTMLInputElement).value;
     onAdd(desc);
   };
 

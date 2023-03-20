@@ -2,9 +2,9 @@ import { Todos } from '@/components/Todos';
 
 type MyListPageMetadata = {
   params: { listId: string };
-}
+};
 
-export async function generateMetadata({ params }: MyListPageMetadata) {
+export function generateMetadata({ params }: MyListPageMetadata) {
   return {
     title: `TODO List ${params.listId}`,
   };
@@ -12,11 +12,8 @@ export async function generateMetadata({ params }: MyListPageMetadata) {
 
 type MyListPageProps = MyListPageMetadata;
 
-
-
-export default async function MyListPage({ params: { listId } }: MyListPageProps) {
+export default function MyListPage({ params: { listId } }: MyListPageProps) {
   // TODO fetch list from server
-
 
   return (
     <div className="flex align-center justify-center p-16 sm:p-8">

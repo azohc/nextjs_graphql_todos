@@ -17,10 +17,8 @@ Preferably in the following order:
 - Make the TODOs draggable (only on client) [react-dnd/](https://react-dnd.github.io/react-dnd/about), [Framer motino](https://www.framer.com/motion/)
 - Add mutation to delete list
 
-
 [GraphQL API](https://harbour-movies.vercel.app/api/graphql)
 Note: Remember to update state after mutation
-
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 

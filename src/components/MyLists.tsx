@@ -31,7 +31,9 @@ export const MyLists = ({ list = [] }: MyListsProps) => {
 
   return (
     <div className="flex flex-col gap-8 text-center">
-      <h1 className="text-4xl">{todoLists.length > 0 ? 'My TODO lists' : 'No lists yet!'}</h1>
+      <h1 className="text-4xl">
+        {todoLists.length > 0 ? 'My TODO lists' : 'No lists yet!'}
+      </h1>
       <ul>
         {todoLists.map((item) => (
           <li key={item.id}>
