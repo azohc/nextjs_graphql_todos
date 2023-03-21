@@ -43,31 +43,32 @@ export const MyLists = ({ lists }: MyListsProps) => {
         `can not delete a list with id=${id} from ${JSON.stringify(todoLists)}`,
       );
 
-    const { getTODOs } = await client.request<{
-      getTODOs: Pick<Todos, 'id' | 'todo_list_id'>[];
-    }>(
-      gql`
-        query GetTODOs($listId: Int!) {
-          getTODOs(listId: $listId) {
-            id
-            todo_list_id
-          }
-        }
-      `,
-      {
-        listId: Number(todoLists[targetList].id),
-        email: MY_EMAIL_KEY,
-      },
-    );
+    ///// no longer needed ?
+    // const { getTODOs } = await client.request<{
+    //   getTODOs: Pick<Todos, 'id' | 'todo_list_id'>[];
+    // }>(
+    //   gql`
+    //     query GetTODOs($listId: Int!) {
+    //       getTODOs(listId: $listId) {
+    //         id
+    //         todo_list_id
+    //       }
+    //     }
+    //   `,
+    //   {
+    //     listId: Number(todoLists[targetList].id),
+    //     email: MY_EMAIL_KEY,
+    //   },
+    // );
 
-    getTODOs.forEach(
-      (td) =>
-        void client.request(REMOVE_TODO_MUTATION, {
-          todoId: td.id,
-          listId: td.todo_list_id,
-          email: MY_EMAIL_KEY,
-        }),
-    );
+    // getTODOs.forEach(
+    //   (td) =>
+    //     void client.request(REMOVE_TODO_MUTATION, {
+    //       todoId: td.id,
+    //       listId: td.todo_list_id,
+    //       email: MY_EMAIL_KEY,
+    //     }),
+    // );
 
     await client.request(DELETE_TODO_LIST_MUTATION, {
       listId: id,
