@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Check } from '@/components/icons/Check';
-import { Close } from '@/components/icons/Close';
+import { Cross } from '@/components/icons/Cross';
 import { AddTodo } from '@/components/AddTodo';
 import { gql } from 'graphql-request';
 import { client } from '@/lib/client';
@@ -28,7 +28,7 @@ const ADD_TODO_MUTATION = gql`
   }
 `;
 
-const REMOVE_TODO_MUTATION = gql`
+export const REMOVE_TODO_MUTATION = gql`
   mutation RemoveTODO($todoId: Int!, $listId: Int!) {
     removeTODO(id: $todoId, listId: $listId)
   }
@@ -121,7 +121,7 @@ export const Todos = ({ list = [], listId }: TodosProps) => {
                   className="btn btn-square btn-error"
                   onClick={() => void onRemoveHandler(item.id)}
                 >
-                  <Close />
+                  <Cross />
                 </button>
               </div>
             )}

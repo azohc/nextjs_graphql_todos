@@ -25,7 +25,7 @@ const GET_TODOS_QUERY = gql`
   }
 `;
 
-interface Todos {
+export interface Todos {
   id: number;
   created_at: string;
   desc: string;

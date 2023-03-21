@@ -8,6 +8,9 @@ import { useState } from 'react';
 import { gql } from 'graphql-request';
 import { client } from '@/lib/client';
 import { MY_EMAIL_KEY } from '@/constants/email';
+import { Cross } from './icons/Cross';
+import { REMOVE_TODO_MUTATION } from './Todos';
+import { Todos } from '@/app/[listId]/page';
 
 export type TodoList = {
   id: number;
@@ -40,6 +43,32 @@ export const MyLists = ({ lists }: MyListsProps) => {
         `can not delete a list with id=${id} from ${JSON.stringify(todoLists)}`,
       );
 
+    const { getTODOs } = await client.request<{
+      getTODOs: Pick<Todos, 'id' | 'todo_list_id'>[];
+    }>(
+      gql`
+        query GetTODOs($listId: Int!) {
+          getTODOs(listId: $listId) {
+            id
+            todo_list_id
+          }
+        }
+      `,
+      {
+        listId: Number(todoLists[targetList].id),
+        email: MY_EMAIL_KEY,
+      },
+    );
+
+    getTODOs.forEach(
+      (td) =>
+        void client.request(REMOVE_TODO_MUTATION, {
+          todoId: td.id,
+          listId: td.todo_list_id,
+          email: MY_EMAIL_KEY,
+        }),
+    );
+
     await client.request(DELETE_TODO_LIST_MUTATION, {
       listId: id,
       email: MY_EMAIL_KEY,
@@ -59,21 +88,27 @@ export const MyLists = ({ lists }: MyListsProps) => {
       {todoLists.length > 0 && (
         <ul>
           {todoLists.map(
-            (item) =>
-              item && (
-                <li key={item.id} className="flex gap-1">
+            (list) =>
+              list && (
+                <li key={list.id} className="flex gap-1">
                   <Link
-                    href={item.id.toString()}
+                    href={list.id.toString()}
                     className={classNames(
                       'py-2 px-4 bg-gray-900 rounded-lg mb-4 flex justify-between items-center min-h-16 text-black hover:scale-[1.02] transform transition duration-300 ease-in-out flex-1',
                       randomColor(),
                     )}
                   >
-                    {item.name}
+                    {list.name}
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        void onDeletedHandler(list.id);
+                      }}
+                      className="btn btn-square btn-error"
+                    >
+                      <Cross />
+                    </button>
                   </Link>
-                  <button onClick={() => void onDeletedHandler(item.id)}>
-                    ❌
-                  </button>
                 </li>
               ),
           )}
