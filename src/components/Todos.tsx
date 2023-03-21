@@ -7,6 +7,7 @@ import { AddTodo } from '@/components/AddTodo';
 import { gql } from 'graphql-request';
 import { client } from '@/lib/client';
 import { MY_EMAIL_KEY } from '@/constants/email';
+import { Reorder } from 'framer-motion';
 
 export type Todo = {
   id: number;
@@ -98,13 +99,16 @@ export const Todos = ({ list = [], listId }: TodosProps) => {
   return (
     <div>
       <h2 className="text-center text-5xl mb-10">My TODO list</h2>
-      <ul>
+      <Reorder.Group axis="y" values={todos} onReorder={setTodos}>
         {todos.map((item) => (
-          <li
+          <Reorder.Item
             key={item.id}
-            className="py-2 pl-4 pr-2 bg-gray-900 rounded-lg mb-4 flex justify-between items-center min-h-16"
+            value={item}
+            className="py-2 pl-4 pr-2 bg-gray-900 rounded-lg mb-4 flex justify-between items-center min-h-16 text-white"
           >
-            <p className={item.finished ? 'line-through' : ''}>{item.desc}</p>
+            <p className={item.finished ? 'line-through text-neutral-500' : ''}>
+              {item.desc}
+            </p>
             {!item.finished && (
               <div className="flex gap-2">
                 <button
@@ -121,9 +125,9 @@ export const Todos = ({ list = [], listId }: TodosProps) => {
                 </button>
               </div>
             )}
-          </li>
+          </Reorder.Item>
         ))}
-      </ul>
+      </Reorder.Group>
       <AddTodo onAdd={(desc) => void onAddHandler(desc)} />
     </div>
   );
